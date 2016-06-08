@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'rubygems'
-require 'zip/zip' # rubyzip gem
+require 'zip' # rubyzip gem
 require 'nokogiri'
 
 class WordXmlManipulate
@@ -12,11 +12,11 @@ class WordXmlManipulate
   def initialize(path, &block)
     @replace = {}
     if block_given?
-      @zip = Zip::ZipFile.open(path)
+      @zip = Zip::File.open(path)
       yield(self)
       @zip.close
     else
-      @zip = Zip::ZipFile.open(path)
+      @zip = Zip::File.open(path)
     end
   end
 
@@ -38,7 +38,7 @@ class WordXmlManipulate
   end
 
   def save(path)
-    Zip::ZipFile.open(path, Zip::ZipFile::CREATE) do |output|
+    Zip::File.open(path, Zip::File::CREATE) do |output|
       @zip.each do |entry|
         output.get_output_stream(entry.name) do |o|
           if @replace[entry.name]
